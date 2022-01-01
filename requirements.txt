@@ -3,7 +3,6 @@ alembic==1.7.5
 anyio==3.4.0
 asgiref==3.4.1
 astroid==2.9.0
-autopep8 @ file:///opt/conda/conda-bld/autopep8_1639166893812/work
 bcrypt==3.2.0
 black==21.12b0
 certifi==2021.10.8
@@ -34,7 +33,6 @@ pep8==1.7.1
 platformdirs==2.4.0
 psycopg2-binary==2.9.2
 pyasn1==0.4.8
-pycodestyle @ file:///tmp/build/80754af9/pycodestyle_1636635402688/work
 pycparser==2.21
 pydantic==1.8.2
 pylint==2.12.2
