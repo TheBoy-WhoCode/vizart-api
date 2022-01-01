@@ -35,7 +35,7 @@ class Tokens(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    user = relationship("User")
+    user = relationship("Users")
 
 
 '''USER'''
@@ -47,6 +47,7 @@ class Users(Base):
     id = Column(String, primary_key=True, nullable=False)
     username = Column(String, nullable=False)
     email = Column(String, nullable=False)
+    number = Column(Integer, nullable=False)
     password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
@@ -71,7 +72,7 @@ class UserPayments(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    user = relationship("User")
+    user = relationship("Users")
 
 
 '''USER ADDRESS'''
@@ -92,7 +93,7 @@ class UserAddress(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    user = relationship("User")
+    user = relationship("Users")
 
 
 '''UPLOAD IMAGE'''
@@ -110,7 +111,7 @@ class UploadImage(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    user = relationship("User")
+    user = relationship("Users")
 
 
 '''PAYMENT DETAILS'''
@@ -146,7 +147,7 @@ class OrderDetails(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    user = relationship("User")
+    user = relationship("Users")
     payment_details = relationship("PaymentDetails")
 
 
@@ -184,7 +185,7 @@ class ProductInventory(Base):
 '''PRODUCTS'''
 
 
-class Prodcuts(Base):
+class Products(Base):
     __tablename__ = "products"
 
     id = Column(String, primary_key=True, nullable=False)
@@ -228,7 +229,12 @@ class ProductImage(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    products = relationship("Products")
+    products = relationship("Products", foreign_keys=[
+                            product_id])
+    inventory = relationship("Products", foreign_keys=[
+        inventory_id])
+    category = relationship("Products", foreign_keys=[
+        category_id])
 
 
 '''ORDER ITEMS'''
@@ -261,9 +267,14 @@ class OrderItems(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    user = relationship("User")
+    user = relationship("Users")
     payment_details = relationship("PaymentDetails")
-    products = relationship("Products")
+    products = relationship("Products", foreign_keys=[
+                            product_id])
+    inventory = relationship("Products", foreign_keys=[
+        inventory_id])
+    category = relationship("Products", foreign_keys=[
+        category_id])
     order_details = relationship('OrderDetails')
 
 
@@ -291,5 +302,10 @@ class Cart(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    user = relationship("User")
-    products = relationship("Products")
+    user = relationship("Users")
+    products = relationship("Products", foreign_keys=[
+                            product_id])
+    inventory = relationship("Products", foreign_keys=[
+        inventory_id])
+    category = relationship("Products", foreign_keys=[
+        category_id])
