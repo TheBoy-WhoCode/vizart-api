@@ -47,7 +47,6 @@ sniffio==1.2.0
 SQLAlchemy==1.4.27
 SQLAlchemy-Utils==0.38.2
 starlette==0.16.0
-toml @ file:///tmp/build/80754af9/toml_1616166611790/work
 tomli==1.2.3
 typing_extensions==4.0.1
 ujson==4.3.0
