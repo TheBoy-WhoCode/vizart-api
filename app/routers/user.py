@@ -9,17 +9,16 @@ import uuid
 
 
 router = APIRouter(
-    prefix="/api/register",
+    prefix="/user",
     tags=["Register"]
 )
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
 
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
-    # print(len(str(user.number)) < 10)
     if(len(str(user.number)) < 10):
         print("[INFO] inside number")
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
@@ -30,3 +29,12 @@ async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+
+@router.get("/{id}")
+async def get_user(id: str, db: Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.id == id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"User with id {id} doesn't exist!")
+    return user

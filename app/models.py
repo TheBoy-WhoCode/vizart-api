@@ -38,6 +38,23 @@ class Tokens(Base):
     user = relationship("Users")
 
 
+'''OTP'''
+
+
+class OTP(Base):
+    __tablename__ = "otp"
+
+    id = Column(String, primary_key=True, nullable=False)
+    user_id = Column(
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
+    user = relationship("Users")
+
+
 '''USER'''
 
 
@@ -46,7 +63,7 @@ class Users(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     username = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    email = Column(String, nullable=False, unique=True)
     number = Column(Integer, nullable=False)
     password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
