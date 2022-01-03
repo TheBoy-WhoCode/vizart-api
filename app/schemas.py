@@ -28,9 +28,9 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id: Optional[str] = None
 
-# '''REFRESH TOKEN'''
 
+'''OTP'''
 
-# class RefreshToken(BaseModel):
-#     id: str
-#     access_token: str
+class OTP(BaseModel):
+    user_id: str
+    otp: int

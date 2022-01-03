@@ -29,7 +29,7 @@ async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
                             detail=f"Kidnly send a valid data")
 
     user_id = str(uuid.uuid1())
-    totp = pyotp.TOTP('base32secret3232', interval=120)
+    totp = pyotp.TOTP('base32secret3232', interval=900)
     otp = totp.now()
 
     new_user = models.Users(id=user_id, **user.dict())
@@ -53,7 +53,7 @@ async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
     return {"user": new_user, "otp": otp}
 
 
-@router.get("/{id}")
+@router.get("/{id}", status_code=status.HTTP_200_OK)
 async def get_user(id: str, db: Session = Depends(get_db)):
     user = db.query(models.Users).filter(models.Users.id == id).first()
     if not user:

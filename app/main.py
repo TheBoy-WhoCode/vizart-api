@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from . import models
 from .database import engine
-from .routers import user, auth, refresh_token
+from .routers import user, auth, refresh_token, otp
 
 # models.Base.metadata.create_all(bind=engine)
 
@@ -21,6 +21,7 @@ app.add_middleware(
 app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(refresh_token.router)
+app.include_router(otp.router)
 
 
 # HOME ROUTE
