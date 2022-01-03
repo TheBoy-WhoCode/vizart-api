@@ -48,6 +48,7 @@ class OTP(Base):
     user_id = Column(
         String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
+    otp = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
@@ -66,6 +67,7 @@ class Users(Base):
     email = Column(String, nullable=False, unique=True)
     number = Column(Integer, nullable=False)
     password = Column(String, nullable=False)
+    status = Column(Boolean, nullable=False, server_default="False")
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
