@@ -22,33 +22,33 @@ async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
 
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
+
     if(len(str(user.number)) < 10):
         print("[INFO] inside number")
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST,
                             detail=f"Kidnly send a valid data")
+
     user_id = str(uuid.uuid1())
-    new_user = models.Users(id=user_id, **user.dict())
-    
-    print(new_user)
     totp = pyotp.TOTP('base32secret3232', interval=120)
     otp = totp.now()
 
-    
+    new_user = models.Users(id=user_id, **user.dict())
+    new_otp = models.OTP(id=str(uuid.uuid1()), user_id=user_id, otp=otp)
+
     try:
         db.add(new_user)
+        db.add(new_otp)
+
         db.commit()
+
         db.refresh(new_user)
+        db.refresh(new_otp)
+
     except exc.IntegrityError:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail=f"User email {user.email} already exist!")
-
-    # user_query = db.query(models.Users).filter(models.Users.id == id).first()
-    new_otp = models.OTP(id=str(uuid.uuid1()), user_id=user_id, )
-    try:
-        db.add()
-
-    except:
-        pass
+    except exc:
+        print(exc)
 
     return {"user": new_user, "otp": otp}
 
