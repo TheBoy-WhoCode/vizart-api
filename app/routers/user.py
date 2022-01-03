@@ -13,7 +13,7 @@ import pyotp
 
 router = APIRouter(
     prefix="/user",
-    tags=["Register"]
+    tags=["User"]
 )
 
 

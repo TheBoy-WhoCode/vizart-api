@@ -22,7 +22,7 @@ async def OTP(otp: schemas.OTP, db: Session = Depends(get_db)):
     if otp.otp == otp_query.otp:
         user_query = db.query(models.Users).filter(
             models.Users.id == otp.user_id)
-        user_query.update({"status": True})
+        user_query.update({"status": True}, synchronize_session=False)
         db.commit()
     else:
         raise HTTPException(
