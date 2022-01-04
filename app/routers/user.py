@@ -26,20 +26,13 @@ async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"status": False, "detail": "Kidnly send a valid data"})
 
     user_id = str(uuid.uuid1())
-    totp = pyotp.TOTP('base32secret3232', interval=900)
-    otp = totp.now()
 
     new_user = models.Users(id=user_id, **user.dict())
-    new_otp = models.OTP(id=str(uuid.uuid1()), user_id=user_id, otp=otp)
 
     try:
         db.add(new_user)
-        db.add(new_otp)
-
         db.commit()
-
         db.refresh(new_user)
-        db.refresh(new_otp)
 
     except exc.IntegrityError:
         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"status": False, "detail": f"User email {user.email} already exist!"})
@@ -47,7 +40,7 @@ async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
     except exc:
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"status": False, "detail": "Server issue"})
 
-    return JSONResponse(status_code=status.HTTP_200_OK, content={"user": new_user, "otp": otp})
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"user": jsonable_encoder(new_user)})
 
 
 @router.get("/{id}", status_code=status.HTTP_200_OK)
