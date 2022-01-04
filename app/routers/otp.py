@@ -1,4 +1,3 @@
-from os import stat_result
 from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm.session import Session

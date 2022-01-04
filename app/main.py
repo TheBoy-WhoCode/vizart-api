@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import user, auth, refresh_token, otp, trial_image, send_otp
+from .routers import upload_image
 
 # models.Base.metadata.create_all(bind=engine)
 
@@ -22,6 +23,7 @@ app.include_router(refresh_token.router)
 app.include_router(otp.router)
 app.include_router(trial_image.router)
 app.include_router(send_otp.router)
+app.include_router(upload_image.router)
 
 
 # HOME ROUTE
