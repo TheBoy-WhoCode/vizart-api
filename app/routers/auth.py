@@ -20,6 +20,10 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
         models.Tokens.user_id == user.id)
     token = token_query.first()
 
+    if user.status == False:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=f"User not verified yet!")
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
