@@ -1,10 +1,7 @@
-from fastapi import APIRouter, Response, status, Depends, HTTPException
-from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from sqlalchemy import exc
+from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.orm.session import Session
-from sqlalchemy.sql.functions import mode
 from ..database import get_db
-from .. import models, schemas, utils, oauth2
+from .. import models, schemas
 
 router = APIRouter(
     tags=['OTP']

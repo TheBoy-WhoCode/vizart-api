@@ -20,8 +20,9 @@ async def sendOTP(data: schemas.SendOTP, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={
                             "status": False, "detail": "User Not Found!"})
-    totp = pyotp.TOTP('base32secret3232', interval=900)
+    totp = pyotp.TOTP('base32secret3232', interval=300)
     otp = totp.now()
+    print(f"[INFO] {otp}")
 
     otp_query.update(
         {"otp": otp, "updated_at": datetime.utcnow()}, synchronize_session=False)
