@@ -1,13 +1,9 @@
-from fastapi import APIRouter, Response, status, Depends, HTTPException, File, UploadFile
+from fastapi import APIRouter,  status, Depends, File, UploadFile
 from typing import List
-from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-import sqlalchemy
 from sqlalchemy.orm.session import Session
-from sqlalchemy.sql.functions import mode
 from ..database import get_db
-from .. import models, schemas, utils, oauth2
+from .. import models
 import uuid
-from datetime import datetime
 import os
 import aiofiles
 from fastapi.responses import JSONResponse
@@ -37,8 +33,8 @@ async def upload_trial_image(files: List[UploadFile] = File(...), db: Session = 
             db.commit()
     except Exception as e:
         return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, content={
-                "message": str(e)}
+            status_code=status.HTTP_400_BAD_REQUEST, content={"status":  False,
+                                                              "detail": str(e)}
         )
     else:
         return JSONResponse(

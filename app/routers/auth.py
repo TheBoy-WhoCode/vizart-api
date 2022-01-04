@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Response, status, Depends, HTTPException
+from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm.session import Session
+from sqlalchemy.sql.sqltypes import JSON
 from ..database import get_db
-from .. import models, schemas, utils, oauth2
+from .. import models, utils, oauth2
 import uuid
 from datetime import datetime
 
@@ -20,32 +22,25 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
     token = token_query.first()
 
     if user.status == False:
-        return {"status": False, "detail": f"User not verified yet!"}
-        # raise HTTPException(
-        #     status_code=status.HTTP_403_FORBIDDEN, detail={"status": False, "detail": f"User not verified yet!"})
+        return JSONResponse(status_code=status.HTTP_200_OK, content={"status": False, "detail": f"User not verified yet!"})
 
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
+        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"status": False, "detail": f"Invalid Credentials"})
 
     if not utils.verify(user_credentials.password, user.password):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
+        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"status": False, "detail": f"Invalid Credentials"})
 
     access_token = oauth2.create_access_token(data={"user_id": user.id})
     values = models.Tokens(id=str(uuid.uuid1()),
                            user_id=user.id, access_token=access_token)
 
     if token is None:
-        print("[INFO] Inside IF")
         db.add(values)
         db.commit()
         db.refresh(values)
     else:
-        print("[INFO] Inside Else")
         token_query.update({"access_token": access_token, "updated_at": datetime.now()},
                            synchronize_session=False)
         db.commit()
 
-    return_value = {"access_token": access_token, "status": "true"}
-    return return_value
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"status": True, "access_token": access_token})
