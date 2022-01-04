@@ -45,7 +45,7 @@ class OTP(BaseModel):
 
 
 class SendOTP(BaseModel):
-    user_id: str
+    user_id: Optional[str]
     email: str
     number: Optional[int]
 
