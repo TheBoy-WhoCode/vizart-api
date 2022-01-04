@@ -30,14 +30,16 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
     access_token = oauth2.create_access_token(data={"user_id": user.id})
     values = models.Tokens(id=str(uuid.uuid1()),
                            user_id=user.id, access_token=access_token)
-
-    if user.id == token.user_id and token.user_id is not None:
+    if token is None:
+        db.add(values)
+        db.commit()
+        db.refresh(values)
+    elif user.id == token.user_id and token.user_id is not None:
         token_query.update({"access_token": access_token,
                            "updated_at": datetime.now()}, synchronize_session=False)
         db.commit()
     else:
-        db.add(values)
-        db.commit()
-        db.refresh(values)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Will Resolve it soon")
 
     return {"status": "success", "access_token": access_token}
