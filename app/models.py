@@ -28,7 +28,7 @@ class Tokens(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     user_id = Column(
-        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     access_token = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
@@ -46,7 +46,7 @@ class OTP(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     user_id = Column(
-        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     otp = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
@@ -82,7 +82,7 @@ class UserPayments(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     user_id = Column(
-        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     payment_type = Column(String, nullable=False)
     expiry = Column(Date,
@@ -102,7 +102,7 @@ class UserAddress(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     user_id = Column(
-        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     address = Column(String, nullable=False)
     city = Column(String, nullable=False)
@@ -123,7 +123,7 @@ class UploadImage(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     user_id = Column(
-        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     image_path = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
@@ -156,10 +156,10 @@ class OrderDetails(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     user_id = Column(
-        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     payment_id = Column(
-        String, ForeignKey("payment_details.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("payment_details.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     total = Column(DECIMAL, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
@@ -235,13 +235,13 @@ class ProductImage(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     product_id = Column(
-        String, ForeignKey("products.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("products.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     inventory_id = Column(
-        String, ForeignKey("products.inventory_id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("products.inventory_id", ondelete="CASCADE"), nullable=False, unique=True
     )
     category_id = Column(
-        String, ForeignKey("products.category_id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("products.category_id", ondelete="CASCADE"), nullable=False, unique=True
     )
     image_path = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
@@ -264,22 +264,22 @@ class OrderItems(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     product_id = Column(
-        String, ForeignKey("products.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("products.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     inventory_id = Column(
-        String, ForeignKey("products.inventory_id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("products.inventory_id", ondelete="CASCADE"), nullable=False, unique=True
     )
     category_id = Column(
-        String, ForeignKey("products.category_id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("products.category_id", ondelete="CASCADE"), nullable=False, unique=True
     )
     order_id = Column(
-        String, ForeignKey("order_details.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("order_details.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     user_id = Column(
-        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     payment_id = Column(
-        String, ForeignKey("payment_details.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("payment_details.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     quantity = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
@@ -305,16 +305,16 @@ class Cart(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     user_id = Column(
-        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     product_id = Column(
-        String, ForeignKey("products.id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("products.id", ondelete="CASCADE"), nullable=False, unique=True
     )
     inventory_id = Column(
-        String, ForeignKey("products.inventory_id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("products.inventory_id", ondelete="CASCADE"), nullable=False, unique=True
     )
     category_id = Column(
-        String, ForeignKey("products.category_id", ondelete="CASCADE"), nullable=False
+        String, ForeignKey("products.category_id", ondelete="CASCADE"), nullable=False, unique=True
     )
     quantity = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),

@@ -26,10 +26,10 @@ async def refreshToken(access_token: str, db: Session = Depends(get_db), current
     if token.user_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="Not authorized to perform requested action")
+    
     access_token = oauth2.create_access_token(
         data={"user_id": current_user.id})
-    # values = models.Tokens(id=token.id,
-    #                        user_id=current_user.id, access_token=access_token)
+   
     token_query.update({"access_token": access_token, "updated_at": datetime.now()},
                        synchronize_session=False)
     db.commit()

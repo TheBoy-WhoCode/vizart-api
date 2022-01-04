@@ -36,6 +36,7 @@ pyasn1==0.4.8
 pycparser==2.21
 pydantic==1.8.2
 pylint==2.12.2
+pyotp==2.6.0
 python-dotenv==0.19.2
 python-jose==3.3.0
 python-multipart==0.0.5

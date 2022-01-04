@@ -5,6 +5,7 @@ from sqlalchemy.orm.session import Session
 from ..database import get_db
 from .. import models, schemas, utils, oauth2
 import uuid
+from datetime import datetime
 
 router = APIRouter(
     tags=['Authentication']
@@ -15,6 +16,8 @@ router = APIRouter(
 async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(models.Users).filter(
         models.Users.email == user_credentials.username).first()
+    token_query = db.query(models.Tokens).filter(models.Users.id == user.id)
+    token = token_query.first()
 
     if not user:
         raise HTTPException(
@@ -27,8 +30,14 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
     access_token = oauth2.create_access_token(data={"user_id": user.id})
     values = models.Tokens(id=str(uuid.uuid1()),
                            user_id=user.id, access_token=access_token)
-    db.add(values)
-    db.commit()
-    db.refresh(values)
 
-    return {"access_token": access_token}
+    if user.id == token.user_id:
+        token_query.update({"access_token": access_token,
+                           "updated_at": datetime.now()}, synchronize_session=False)
+        db.commit()
+    else:
+        db.add(values)
+        db.commit()
+        db.refresh(values)
+
+    return {"status": "success", "access_token": access_token}
