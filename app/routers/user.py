@@ -1,5 +1,6 @@
 from fastapi import status, APIRouter
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 from fastapi.params import Depends
 from sqlalchemy.orm.session import Session
 from sqlalchemy import exc
@@ -55,4 +56,4 @@ async def get_user(id: str, db: Session = Depends(get_db)):
     if not user:
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"status": False, "detail": f"User with id {id} doesn't exist!"})
 
-    return JSONResponse(status_code=status.HTTP_200_OK, content={"status": True, "detail": user})
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"status": True, "detail": jsonable_encoder(user)})

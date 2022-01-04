@@ -13,9 +13,15 @@ router = APIRouter(
 
 @router.post("/sendOTP",  status_code=status.HTTP_200_OK)
 async def sendOTP(data: schemas.SendOTP, db: Session = Depends(get_db)):
-    user_query = db.query(models.Users).filter(models.Users.id == data.user_id)
-    otp_query = db.query(models.OTP).filter(models.OTP.user_id == data.user_id)
+    user_query = db.query(models.Users).filter(
+        models.Users.email == data.email)
+
     user = user_query.first()
+    otp_query = db.query(models.OTP).filter(models.OTP.user_id == user.id)
+    temp = otp_query.first()
+    # join = db.query(models.Users).join(
+    #     models.OTP, models.OTP.user_id == models.Users.id, isouter=True)
+    print(temp.user_id)
     if not user:
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"status": False, "detail": "User Not Found!"})
 
