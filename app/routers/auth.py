@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Response, status, Depends, HTTPException
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from sqlalchemy import schema
 from sqlalchemy.orm.session import Session
 from ..database import get_db
 from .. import models, schemas, utils, oauth2
@@ -22,7 +21,7 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
 
     if user.status == False:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=f"User not verified yet!")
+            status_code=status.HTTP_403_FORBIDDEN, detail={"status": False, "detail": f"User not verified yet!"})
 
     if not user:
         raise HTTPException(
@@ -47,5 +46,5 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
                            synchronize_session=False)
         db.commit()
 
-    return_value = {"access_token": access_token, "status": "success"}
+    return_value = {"access_token": access_token, "status": "true"}
     return return_value

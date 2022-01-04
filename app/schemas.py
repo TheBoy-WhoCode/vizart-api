@@ -34,3 +34,9 @@ class TokenData(BaseModel):
 class OTP(BaseModel):
     user_id: str
     otp: int
+
+'''SEND OTP'''
+class SendOTP(BaseModel):
+    user_id: str
+    email : str
+    number : int
