@@ -31,7 +31,7 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
     values = models.Tokens(id=str(uuid.uuid1()),
                            user_id=user.id, access_token=access_token)
 
-    if user.id == token.user_id:
+    if user.id == token.user_id and token.user_id is not None:
         token_query.update({"access_token": access_token,
                            "updated_at": datetime.now()}, synchronize_session=False)
         db.commit()
