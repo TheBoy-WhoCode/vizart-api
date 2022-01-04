@@ -1,4 +1,5 @@
 from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm.session import Session
 from ..database import get_db
@@ -32,4 +33,4 @@ async def sendOTP(data: schemas.SendOTP, db: Session = Depends(get_db)):
     otp_query.update(
         {"otp": otp, "updated_at": datetime.utcnow()}, synchronize_session=False)
     db.commit()
-    return JSONResponse(status_code=status.HTTP_200_OK, content={"status": True, "detail": "OTP sent successfully"})
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"status": True, "detail": "OTP sent successfully", "user_id": jsonable_encoder(user.id)})
