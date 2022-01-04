@@ -20,8 +20,9 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
     token = token_query.first()
 
     if user.status == False:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail={"status": False, "detail": f"User not verified yet!"})
+        return {"status": False, "detail": f"User not verified yet!"}
+        # raise HTTPException(
+        #     status_code=status.HTTP_403_FORBIDDEN, detail={"status": False, "detail": f"User not verified yet!"})
 
     if not user:
         raise HTTPException(
