@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import DECIMAL, TIMESTAMP
+from sqlalchemy.sql.sqltypes import DECIMAL, INTEGER, TIMESTAMP
 from .database import Base
 from sqlalchemy import Column, Integer, String, Boolean, Date
 
@@ -48,7 +48,7 @@ class OTP(Base):
     user_id = Column(
         String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
     )
-    otp = Column(Integer, nullable=False)
+    otp = Column(String(6), nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
@@ -65,7 +65,7 @@ class Users(Base):
     id = Column(String, primary_key=True, nullable=False)
     username = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True)
-    number = Column(Integer, nullable=False)
+    number = Column(String(10), nullable=False)
     password = Column(String, nullable=False)
     status = Column(Boolean, nullable=False, server_default="False")
     created_at = Column(TIMESTAMP(timezone=True),

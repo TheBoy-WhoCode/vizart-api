@@ -21,7 +21,6 @@ async def sendOTP(data: schemas.SendOTP, db: Session = Depends(get_db)):
     user = user_query.first()
     otp_query = db.query(models.OTP).filter(models.OTP.user_id == user.id)
     temp = otp_query.first()
-    # user.id not in temp.user_id or
 
     if temp is None:
         totp = pyotp.TOTP('base32secret3232', interval=300)

@@ -7,8 +7,6 @@ from sqlalchemy import exc
 from ..database import get_db
 from .. import models, schemas, utils
 import uuid
-import pyotp
-
 
 router = APIRouter(
     prefix="/user",
@@ -33,14 +31,13 @@ async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
-
     except exc.IntegrityError:
         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"status": False, "detail": f"User email {user.email} already exist!"})
 
     except exc:
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"status": False, "detail": "Server issue"})
-
-    return JSONResponse(status_code=status.HTTP_200_OK, content={"user": jsonable_encoder(new_user)})
+    else:
+        return JSONResponse(status_code=status.HTTP_200_OK, content={"status": True, "user": jsonable_encoder(new_user)})
 
 
 @router.get("/{id}", status_code=status.HTTP_200_OK)
