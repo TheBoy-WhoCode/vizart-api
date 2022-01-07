@@ -217,7 +217,7 @@ class Products(Base):
     product_name = Column(String, nullable=False)
     product_type = Column(String, nullable=False)
     price = Column(DECIMAL, nullable=False)
-    product_image = Column(String, nullable=False)
+    # product_image = Column(String, nullable=False)
     product_desc = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))

@@ -1,14 +1,14 @@
 from uuid import uuid1
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, status, Depends
 from fastapi.datastructures import UploadFile
+from fastapi.encoders import jsonable_encoder
 from fastapi.params import File, Form
 from fastapi.responses import JSONResponse
-import sqlalchemy
-from sqlalchemy import exc
+from sqlalchemy.orm import query, query_expression
 from sqlalchemy.orm.session import Session
-from sqlalchemy.sql.functions import mode
+from sqlalchemy.sql.functions import func, mode
 from ..database import get_db
-from .. import models, schemas
+from .. import models
 import os
 import aiofiles
 
@@ -58,7 +58,7 @@ async def add_product(product_name: str = Form(...),
             product_name=product_name,
             product_type=product_type,
             price=product_price,
-            product_image=path,
+
             product_desc=product_desc)
 
         prod_image = models.ProductImage(id=product_img_id,
@@ -71,11 +71,21 @@ async def add_product(product_name: str = Form(...),
         db.add(new_product)
         db.add(prod_image)
         db.commit()
-        # db.refresh(inventory)
-        # db.refresh(category)
-        # db.refresh(new_product)
-        # db.refresh(prod_image)
     except Exception as e:
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"status": False, "detail": f"Something wen't wrong {e}"})
     else:
         return JSONResponse(status_code=status.HTTP_200_OK, content={"status": False, "detail": f"Product Added Successfully."})
+
+
+@router.get("/getProducts")
+async def getProducts(db: Session = Depends(get_db)):
+    try:
+
+        query = db.query(models.Products,
+                         models.ProductImage,
+                         models.ProductCategory).filter(models.Products.id == models.ProductImage.product_id).filter(models.Products.category_id == models.ProductCategory.id).all()
+    except Exception as e:
+        print(e)
+    else:
+        return JSONResponse(status_code=status.HTTP_200_OK, content={"status": False, "detail": jsonable_encoder(query)})
+    pass

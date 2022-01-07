@@ -1,4 +1,5 @@
 from fastapi import APIRouter, status, Depends
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm.session import Session
 from ..database import get_db
@@ -30,4 +31,4 @@ async def refreshToken(access_token: str, db: Session = Depends(get_db), current
     token_query.update({"access_token": access_token, "updated_at": datetime.now()},
                        synchronize_session=False)
     db.commit()
-    return JSONResponse(status_code=status.HTTP_200_OK, content={"status": True, "detail": token_query.first()})
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"status": True, "detail": jsonable_encoder(token_query.first())})
