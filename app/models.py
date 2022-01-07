@@ -123,7 +123,7 @@ class UploadImage(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     user_id = Column(
-        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True
+        String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     image_path = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),

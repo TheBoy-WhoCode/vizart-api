@@ -1,5 +1,6 @@
 from fastapi import APIRouter,  status, Depends, File, UploadFile
 from typing import List
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm.session import Session
 from ..database import get_db
 from .. import models
@@ -45,4 +46,7 @@ async def upload_trial_image(files: List[UploadFile] = File(...), db: Session = 
 @router.get("/trialImages")
 async def get_trial_images(db: Session = Depends(get_db)):
     image_query = db.query(models.TrialImage).all()
-    return image_query
+    return JSONResponse(
+        status_code=status.HTTP_200_OK, content={
+            "status": True, "detail": jsonable_encoder(image_query)}
+    )

@@ -1,4 +1,6 @@
 from typing import Optional
+from fastapi.datastructures import UploadFile
+from fastapi.params import File
 from pydantic import BaseModel, EmailStr
 from uuid import UUID
 
@@ -53,3 +55,15 @@ class UploadImage(BaseModel):
     id: UUID
     user_id: UUID
 
+
+''' ADD PRODUCT'''
+
+
+class AddProduct(BaseModel):
+    product_name: str
+    product_type: str
+    product_desc: str
+    product_price: float
+    product_quantity: int
+    category_name: str
+    category_desc: str

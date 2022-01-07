@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
+@router.post("/register")
 async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
 
     hashed_password = utils.hash(user.password)
@@ -33,7 +33,6 @@ async def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
         db.refresh(new_user)
     except exc.IntegrityError:
         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"status": False, "detail": f"User email {user.email} already exist!"})
-
     except exc:
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"status": False, "detail": "Server issue"})
     else:
